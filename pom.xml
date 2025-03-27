@@ -55,18 +55,6 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
-      <dependency>
-        <groupId>org.webjars.npm</groupId>
-        <artifactId>bootstrap</artifactId>
-        <version>5.3.3</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.webjars.npm</groupId>
-        <artifactId>json-editor__json-editor</artifactId>
-        <version>2.14.1</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -161,49 +149,6 @@
                 </requireMavenVersion>
                 <dependencyConvergence />
               </rules>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>unpack</id>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <phase>process-resources</phase>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.webjars.npm</groupId>
-                  <artifactId>json-editor__json-editor</artifactId>
-                  <includes>**/dist/jsoneditor.js</includes>
-                  <fileMappers>
-                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
-                    <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
-                      <pattern>jsoneditor.js</pattern>
-                      <replacement>jsoneditor_min.js</replacement>
-                    </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
-                  </fileMappers>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.webjars.npm</groupId>
-                  <artifactId>bootstrap</artifactId>
-                  <includes>**/dist/css/bootstrap.min.css</includes>
-                  <fileMappers>
-                    <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper />
-                    <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
-                      <pattern>bootstrap.min.css</pattern>
-                      <replacement>bootstrap_min.css</replacement>
-                    </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
-                  </fileMappers>
-                </artifactItem>
-              </artifactItems>
-              <outputDirectory>target/classes/io/jenkins/plugins/json_editor_parameter/JsonEditorParameterDefinition/</outputDirectory>
             </configuration>
           </execution>
         </executions>

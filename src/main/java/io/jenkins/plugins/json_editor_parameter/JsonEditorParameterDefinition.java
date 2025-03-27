@@ -31,7 +31,7 @@ public class JsonEditorParameterDefinition extends SimpleParameterDefinition {
     private static final Pattern OK_NAME = Pattern.compile("[A-Za-z][\\w-]{0,63}");
 
     private String schema;
-    private String startval;
+    private String json;
     private String options = "{}";
 
     @DataBoundConstructor
@@ -61,12 +61,12 @@ public class JsonEditorParameterDefinition extends SimpleParameterDefinition {
     }
 
     @DataBoundSetter
-    public void setStartval(String startval) {
-        startval = Util.fixEmptyAndTrim(startval);
-        if (startval != null) {
-            checkValidJson(startval, "startval must be valid json or empty.");
+    public void setJson(String json) {
+        json = Util.fixEmptyAndTrim(json);
+        if (json != null) {
+            checkValidJson(json, "json must be valid json or empty.");
         }
-        this.startval = startval;
+        this.json = json;
     }
 
     @DataBoundSetter
@@ -77,12 +77,21 @@ public class JsonEditorParameterDefinition extends SimpleParameterDefinition {
 
     @Restricted(DoNotUse.class) // invoked from index.jelly
     public String getMergedOptions() {
-        Map<String, Object> optionMap = new HashMap<>(JsonUtil.toMap(options));
-        if (startval != null) {
-            optionMap.put("startval", JsonUtil.toObject(startval));
+        Map<String, Object> optionMap = new HashMap<>();
+
+        // Add schema (always present as it's mandatory)
+        if (schema != null && !schema.isEmpty()) {
+            optionMap.put("schema", JsonUtil.toMap(schema));
         }
-        optionMap.put("schema", JsonUtil.toMap(schema));
-        return JsonUtil.toJson(optionMap);
+
+        // Add json if provided
+        if (json != null && !json.isEmpty()) {
+            optionMap.put("json", JsonUtil.toObject(json));
+        }
+
+        String result = JsonUtil.toJson(optionMap);
+        System.out.println("Merged Options: " + result); // Debug output
+        return result;
     }
 
     @Override
@@ -90,7 +99,7 @@ public class JsonEditorParameterDefinition extends SimpleParameterDefinition {
         if (defaultValue instanceof JsonEditorParameterValue) {
             JsonEditorParameterDefinition def = new JsonEditorParameterDefinition(getName());
             def.setDescription(getDescription());
-            def.setStartval(((JsonEditorParameterValue) defaultValue).getJson());
+            def.setJson(((JsonEditorParameterValue) defaultValue).getJson());
             return def;
         } else {
             return this;
@@ -110,10 +119,10 @@ public class JsonEditorParameterDefinition extends SimpleParameterDefinition {
 
     @Override
     public JsonEditorParameterValue getDefaultParameterValue() {
-        if (startval == null) {
+        if (json == null) {
             return null;
         }
-        return new JsonEditorParameterValue(getName(), startval, getDescription());
+        return new JsonEditorParameterValue(getName(), json, getDescription());
     }
 
     @Extension
@@ -154,12 +163,12 @@ public class JsonEditorParameterDefinition extends SimpleParameterDefinition {
 
         @Override
         @POST
-        public FormValidation doCheckStartval(@QueryParameter String startval) {
+        public FormValidation doCheckJson(@QueryParameter String json) {
             Jenkins.get().checkPermission(Jenkins.READ);
-            if (Util.fixEmptyAndTrim(startval) == null) {
+            if (Util.fixEmptyAndTrim(json) == null) {
                 return FormValidation.ok();
             }
-            return isValidJson(startval, "startval must be valid json or empty");
+            return isValidJson(json, "json must be valid json or empty");
         }
 
         @Override

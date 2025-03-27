@@ -8,7 +8,7 @@ The json editor generates an HTML form from a JSON Schema.
 ## Getting started
 
 There are two principal configuration parameters: `schema`, which contains the json schema of the input form; and
-`startval`, which contains the starting values of the form.  An additional parameter `options` contains the lesser used
+`json`, which contains the JSON data. An additional parameter `options` contains the lesser used
 parameters which configure the form.  See [options](https://github.com/json-editor/json-editor#options) for additional
 information.
 
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     def values= input message: 'an input test', parameters: [
-                        jsonEditor(name: 'First', schema: '{"type":"object","title":"Car","properties":{"make":{"type":"string","enum":["Toyota","BMW","Honda","Ford","Chevy","VW"]},"model":{"type":"string"},"year":{"type":"integer","enum":[1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014],"default":2008},"safety":{"type":"integer","format":"rating","maximum":"5","exclusiveMaximum":false,"readonly":false}}}', startval: '{"make":"Toyota","safety":4}')
+                        jsonEditor(name: 'First', schema: '{"type":"object","title":"Car","properties":{"make":{"type":"string","enum":["Toyota","BMW","Honda","Ford","Chevy","VW"]},"model":{"type":"string"},"year":{"type":"integer","enum":[1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014],"default":2008},"safety":{"type":"integer","format":"rating","maximum":"5","exclusiveMaximum":false,"readonly":false}}}', json: '{"make":"Toyota","safety":4}')
                     ]
                     println(values)
                 }
